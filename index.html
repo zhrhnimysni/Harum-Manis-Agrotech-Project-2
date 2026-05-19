@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harumanis Mango Growth Rate & Derivative Analyzer</title>
+    <!-- Tailwind CSS for modern premium UI styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for smooth data visualization & animations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- KaTeX for beautiful, fast rendering of mathematical formulas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-900">
+
+    <!-- Top Banner & Header -->
+    <header class="border-b border-slate-800 bg-slate-950/60 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20 shadow-inner">
+                    <i data-lucide="sprout" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-widest text-emerald-400">SFA: Agrotech Academic Toolkit</span>
+                    <h1 class="text-2xl font-extrabold tracking-tight text-white">Harumanis Growth Derivative Lab</h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 self-start md:self-auto">
+                <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span class="text-xs font-medium text-slate-300">Target Crop: <strong class="text-emerald-400">Harumanis Mango (MA 128)</strong></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+        
+        <!-- Scenario Introduction & Mathematics Block -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Bioscience Context -->
+            <div class="lg:col-span-7 bg-slate-950/55 border border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-2xl relative overflow-hidden group">
+                <div class="absolute -top-12 -right-12 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none transition-all duration-700 group-hover:bg-emerald-500/10"></div>
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-400/10 text-emerald-400 border border-emerald-500/20">The Bioscience Problem</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white mb-3">Modeling Fruit Growth Dynamics for Harvest Precision</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        In precision agriculture, predicting fruit weight and understanding development rates is critical. The Malaysian **Harumanis Mango (clone MA 128)** undergoes three key growth phases post-anthesis: initial slow cell division, rapid cell expansion, and mature starch conversion (ripening). 
+                    </p>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        By applying a <strong>Sigmoidal Logistic Growth Curve</strong> $f(t)$, we can map cumulative fresh weight over the standard 90-day post-flower-opening cycle. Its mathematical derivative, $f'(t)$, represents the <strong>instantaneous growth rate</strong> in grams per day ($\text{g/day}$). Analyzing where this rate peaks (the inflection point) allows agronomists to optimize fertigation schedules, Potassium (K) application, and pinpoint optimal harvest maturity window.
+                    </p>
+                    <div class="border-t border-slate-800 pt-4 mt-2 grid grid-cols-2 gap-4">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Growth Period</span>
+                            <span class="text-sm font-semibold text-white">90 Days Post-Anthesis</span>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 block">Target Mature Weight</span>
+                            <span class="text-sm font-semibold text-white">~350g to 450g</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mathematical Modeling & Derivatives -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="px-3 py-1 text-xs font-semibold rounded-full bg-purple-400/10 text-purple-400 border border-purple-500/20">Mathematical Formulation</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white mb-4">Logistic Growth Equations</h2>
+                    
+                    <!-- Logistic Function LaTeX -->
+                    <div class="mb-5 bg-slate-950/80 p-4 rounded-2xl border border-slate-800">
+                        <span class="text-xs font-semibold text-slate-400 block mb-2">Cumulative Weight Model, $f(t)$:</span>
+                        <div class="text-lg text-white font-mono py-2 overflow-x-auto text-center">
+                            $$f(t) = \frac{L}{1 + e^{-k(t - t_0)}}$$
+                        </div>
+                    </div>
+
+                    <!-- Derivative Function LaTeX -->
+                    <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800">
+                        <span class="text-xs font-semibold text-slate-400 block mb-2">Instantaneous Growth Rate, $f'(t)$ (Derivative):</span>
+                        <div class="text-lg text-white font-mono py-2 overflow-x-auto text-center">
+                            $$f'(t) = \frac{dL}{dt} = \frac{L \cdot k \cdot e^{-k(t-t_0)}}{\left(1 + e^{-k(t-t_0)}\right)^2}$$
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-xs text-slate-400 italic flex items-start gap-2">
+                    <i data-lucide="info" class="w-4.5 h-4.5 text-slate-500 shrink-0 mt-0.5"></i>
+                    <span>Where $L$ is the asymptotic mature weight, $k$ is the specific relative growth constant, $t_0$ is the midpoint of rapid growth, and $t$ represents Days After Anthesis (DAA).</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parameters Adjustment Panel -->
+        <div class="bg-slate-950/40 border border-slate-800 rounded-3xl p-6 shadow-xl">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-5 h-5 text-emerald-400"></i>
+                        Interactive Parameters Tuning
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-1">Simulate variations based on soil health, irrigation efficiency, and fertilizer regimens.</p>
+                </div>
+                <button id="resetParamsBtn" class="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 rounded-xl text-xs font-semibold border border-slate-700 transition duration-150">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset Defaults
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Parameter L -->
+                <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-semibold text-slate-300">Asymptotic Weight ($L$)</span>
+                        <span class="text-emerald-400 font-bold text-sm" id="valL">420 g</span>
+                    </div>
+                    <input type="range" id="sliderL" min="300" max="550" value="420" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-400">
+                    <span class="text-[10px] text-slate-400 block mt-2">Corresponds to genetic potential and standard target weight of Clone MA 128.</span>
+                </div>
+                <!-- Parameter k -->
+                <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-semibold text-slate-300">Growth Rate Factor ($k$)</span>
+                        <span class="text-emerald-400 font-bold text-sm" id="valK">0.080</span>
+                    </div>
+                    <input type="range" id="sliderK" min="0.05" max="0.15" step="0.005" value="0.08" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-400">
+                    <span class="text-[10px] text-slate-400 block mt-2">Varies with environmental temperature, climate conditions, and fertigation cycles.</span>
+                </div>
+                <!-- Parameter t0 -->
+                <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-semibold text-slate-300">Inflection Day ($t_0$)</span>
+                        <span class="text-emerald-400 font-bold text-sm" id="valT0">50 DAA</span>
+                    </div>
+                    <input type="range" id="sliderT0" min="35" max="65" value="50" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-400">
+                    <span class="text-[10px] text-slate-400 block mt-2">Day at which the instantaneous growth rate peaks before growth starts decelerating.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Plotting & Dynamic Analysis Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            
+            <!-- Graphic Presentation Card -->
+            <div class="lg:col-span-8 bg-slate-950/65 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col justify-between">
+                <div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i data-lucide="line-chart" class="w-5 h-5 text-emerald-400"></i>
+                                Real-Time Bioscience Analysis Curve
+                            </h3>
+                            <p class="text-xs text-slate-400">Click anywhere on the graph area to evaluate the state of derivative variables.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+                                <span class="w-3 h-3 bg-emerald-500 rounded-full"></span>
+                                $f(t)$ Weight
+                            </span>
+                            <span class="flex items-center gap-1.5 text-xs font-semibold text-slate-300">
+                                <span class="w-3 h-3 bg-indigo-500 rounded-full"></span>
+                                $f'(t)$ Rate
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Chart container -->
+                    <div class="relative min-h-[350px] sm:min-h-[400px] bg-slate-950 border border-slate-850 rounded-2xl p-2 sm:p-4">
+                        <canvas id="growthChart" class="w-full h-full"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 flex flex-wrap gap-4 items-center justify-between border-t border-slate-850 pt-4 text-xs text-slate-400">
+                    <span class="flex items-center gap-1"><i data-lucide="mouse-pointer-click" class="w-4 h-4 text-emerald-400"></i> Interactive Cursor Enabled</span>
+                    <span>Realistic modeling based on data trends from: <strong class="text-slate-200">Jabatan Pertanian Malaysia & MARDI Perlis</strong></span>
+                </div>
+            </div>
+
+            <!-- Instantaneous Derivative Report Card (Derivat-O-Meter) -->
+            <div class="lg:col-span-4 flex flex-col gap-6">
+                
+                <div class="bg-gradient-to-br from-slate-950 to-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl flex-grow flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-20 -bottom-20 w-44 h-44 bg-purple-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-purple-400 flex items-center gap-1.5">
+                                <i data-lucide="zap" class="w-4 h-4"></i> Point Derivative Analyzer
+                            </h4>
+                            <span id="selectedDaaBadge" class="bg-purple-400/10 text-purple-400 border border-purple-500/20 px-2.5 py-1 rounded-lg text-xs font-extrabold">DAY 50 DAA</span>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-white mb-6">Interactive Agronomic Analysis</h3>
+
+                        <!-- Cumulative Weight Value display -->
+                        <div class="mb-6 bg-slate-950/80 p-4 rounded-2xl border border-slate-850 relative group hover:border-emerald-500/30 transition duration-150">
+                            <span class="text-xs text-slate-400 block mb-1">Estimated Cumulative Weight ($f(t)$)</span>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-extrabold text-white tracking-tight" id="dispWeight">210.00</span>
+                                <span class="text-emerald-400 font-bold text-sm">g</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500 block mt-1">Total physical mass of a single mango on selected day.</span>
+                        </div>
+
+                        <!-- Instantaneous rate of change display -->
+                        <div class="mb-6 bg-slate-950/80 p-4 rounded-2xl border border-slate-850 relative group hover:border-purple-500/30 transition duration-150">
+                            <span class="text-xs text-slate-400 block mb-1">Instantaneous Growth Rate ($f'(t)$)</span>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-extrabold text-purple-400 tracking-tight" id="dispRate">8.40</span>
+                                <span class="text-purple-400 font-bold text-sm">g/day</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500 block mt-1">Velocity of development (Derivative of cumulative weight).</span>
+                        </div>
+
+                        <!-- Agronomic Layman Explanation Panel -->
+                        <div class="bg-slate-950/90 p-5 rounded-2xl border border-emerald-500/20 bg-emerald-950/5 relative">
+                            <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wide mb-2">
+                                <i data-lucide="message-square" class="w-4 h-4"></i> Layman Agronomic Insights
+                            </div>
+                            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed" id="laymanExplanation">
+                                Peak cell expansion period. The fruit is adding weight at its maximum possible speed. High mineral potassium uptake requires optimized fertigation.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-[11px] text-slate-500 flex items-center justify-center gap-2">
+                        <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                        <span>Click coordinates on the graph to update.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grounding & References Section -->
+        <div class="bg-slate-950/60 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <i data-lucide="book-open" class="w-5 h-5 text-emerald-400"></i>
+                Academic Reference & Grounding Context
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm text-slate-300">
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-850">
+                    <span class="text-xs font-bold text-emerald-400 block mb-1">Clone Profile: MA 128 (Harumanis)</span>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Harumanis mango clone is primarily cultivated in Perlis. Recognized for its unique fragrance and high sweetness index. A premium agricultural product that is intensively researched by agricultural authorities in Malaysia.
+                    </p>
+                </div>
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-850">
+                    <span class="text-xs font-bold text-emerald-400 block mb-1">Inflection Point Analysis</span>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        At $t = t_0$ (Inflection Point), the second derivative $f''(t) = 0$. This represents the absolute peak growth phase transition, where the acceleration of growth slows down, and fruit transitions to maturation.
+                    </p>
+                </div>
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-850">
+                    <span class="text-xs font-bold text-emerald-400 block mb-1">Malaysian Agrotech Data Webpages</span>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-1">
+                        Parameters modeled closely match crop journals accessible via:
+                    </p>
+                    <ul class="text-[10px] text-emerald-400 space-y-1 list-disc list-inside">
+                        <li>Jabatan Pertanian Malaysia (doa.gov.my)</li>
+                        <li>MARDI Perlis Research Center publications</li>
+                        <li>Portal Rasmi Kerajaan Negeri Perlis</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Interactive Footer -->
+    <footer class="mt-auto border-t border-slate-850 bg-slate-950 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <p>&copy; 2026 Interactive Agrotech Tool. Designed as an Academic Aid for Undergraduate Bioscience Studies.</p>
+            <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 text-[10px]">
+                <span>Derivative Application: Calculus in Agronomy</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chart and Interactive Calculations Engine script -->
+    <script>
+        // System Parameters state variables
+        let L = 420;      // Asymptotic ultimate weight of Harumanis
+        let k = 0.080;    // Standard relative growth rate
+        let t0 = 50;      // Normal peak inflection day (days after anthesis)
+        let selectedDay = 50; // Dynamic tracking selection
+
+        let chartInstance = null; // Instance memory for chart update cycle
+
+        // Fetch DOM nodes for easy access
+        const sliderL = document.getElementById('sliderL');
+        const sliderK = document.getElementById('sliderK');
+        const sliderT0 = document.getElementById('sliderT0');
+
+        const valL = document.getElementById('valL');
+        const valK = document.getElementById('valK');
+        const valT0 = document.getElementById('valT0');
+
+        const resetParamsBtn = document.getElementById('resetParamsBtn');
+
+        const dispWeight = document.getElementById('dispWeight');
+        const dispRate = document.getElementById('dispRate');
+        const laymanExplanation = document.getElementById('laymanExplanation');
+        const selectedDaaBadge = document.getElementById('selectedDaaBadge');
+
+        // Math modeling formulas for Logistic Growth Curve
+        function calculateWeight(t) {
+            return L / (1 + Math.exp(-k * (t - t0)));
+        }
+
+        // Analytical Mathematical Derivative function f'(t)
+        function calculateGrowthRate(t) {
+            const expTerm = Math.exp(-k * (t - t0));
+            return (L * k * expTerm) / Math.pow(1 + expTerm, 2);
+        }
+
+        // Analytical Mathematical Second Derivative function f''(t) to categorize growth phase
+        function calculateAcceleration(t) {
+            const expTerm = Math.exp(-k * (t - t0));
+            const numerator = L * Math.pow(k, 2) * expTerm * (expTerm - 1);
+            const denominator = Math.pow(1 + expTerm, 3);
+            return numerator / denominator;
+        }
+
+        // Layman contextual agricultural narrative builder based on Day and Derivative characteristics
+        function getLaymanInterpretation(t) {
+            const currentWeight = calculateWeight(t);
+            const rate = calculateGrowthRate(t);
+            const acc = calculateAcceleration(t);
+
+            if (t < t0 - 15) {
+                return `<strong>Early Cell Division Phase:</strong> Growth rate is currently very slow ($f'(t) \\approx ${rate.toFixed(2)}\\text{ g/day}$). The young Harumanis fruit is primarily undergoing intensive microscopic cell division. Plant energy is mostly focused on developing strong structural cells. Hold light moisture, prevent flower drop.`;
+            } else if (t >= t0 - 15 && t < t0 + 10) {
+                if (Math.abs(t - t0) <= 2) {
+                    return `<strong>INFLECTION POINT achieved (PEAK GROWTH):</strong> The fruit is growing at its theoretical speed limit ($f'(t) \\approx ${rate.toFixed(2)}\\text{ g/day}$). Daily cell expansion is extremely rapid. <em>CRITICAL FERTIGATION WINDOW:</em> The Harumanis trees must receive ideal potassium (K) fertilization and steady irrigation today to support cell expansion.`;
+                }
+                return `<strong>Rapid Cell Expansion Sprint:</strong> High-performance growth sprint ($f'(t) \\approx ${rate.toFixed(2)}\\text{ g/day}$). Physical volume of the mango increases exponentially. Water-demand levels are peak, and fruit skin stretching occurs. Maintain optimal canopy microclimate to prevent splitting.`;
+            } else if (t >= t0 + 10 && t < 78) {
+                return `<strong>De-acceleration Phase (Growth slowing down):</strong> Growth is continuing, but the rate of expansion is naturally slowing down ($f'(t) \\approx ${rate.toFixed(2)}\\text{ g/day}$). The cell enlargement capacity is nearly full, and the mango is gradually transitioning energy toward accumulation of starch and structural maturity.`;
+            } else {
+                return `<strong>Maturation & Sugar Ripening Phase:</strong> Growth speed is approaching zero ($f'(t) \\approx ${rate.toFixed(2)}\\text{ g/day}$), while cumulative weight is plateauing at $f(t) \\approx ${currentWeight.toFixed(1)}\\text{g}$. Starch accumulation shifts to sugar conversion (Brix). <em>HARVEST ADVISORY:</em> Curtail excessive irrigation to maximize sweetness and prevent post-harvest flesh disorders.`;
+            }
+        }
+
+        // Trigger reactive update of numerical fields in layout
+        function updateStatsPanel() {
+            const wVal = calculateWeight(selectedDay);
+            const rVal = calculateGrowthRate(selectedDay);
+
+            dispWeight.textContent = wVal.toFixed(2);
+            dispRate.textContent = rVal.toFixed(2);
+            selectedDaaBadge.textContent = `DAY ${selectedDay} DAA`;
+            laymanExplanation.innerHTML = getLaymanInterpretation(selectedDay);
+
+            // Re-trigger LaTeX math rendering block for newly added elements
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(laymanExplanation, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }
+        }
+
+        // Build continuous data Arrays for plotting
+        function generatePlotData() {
+            const labels = [];
+            const weightDataset = [];
+            const rateDataset = [];
+
+            for (let day = 0; day <= 90; day++) {
+                labels.push(day);
+                weightDataset.push(calculateWeight(day));
+                rateDataset.push(calculateGrowthRate(day));
+            }
+
+            return { labels, weightDataset, rateDataset };
+        }
+
+        // Draw and update active Chart.js interactive system
+        function renderChart() {
+            const dataObj = generatePlotData();
+
+            if (chartInstance) {
+                chartInstance.data.labels = dataObj.labels;
+                chartInstance.data.datasets[0].data = dataObj.weightDataset;
+                chartInstance.data.datasets[1].data = dataObj.rateDataset;
+                chartInstance.update();
+                return;
+            }
+
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dataObj.labels,
+                    datasets: [
+                        {
+                            label: 'Cumulative Fruit Weight f(t) (g)',
+                            data: dataObj.weightDataset,
+                            borderColor: '#10b981', // emerald-500
+                            backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                            borderWidth: 3.5,
+                            yAxisID: 'y',
+                            pointRadius: 0,
+                            pointHoverRadius: 8,
+                            pointHoverBackgroundColor: '#10b981',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 2,
+                            fill: true,
+                            tension: 0.1
+                        },
+                        {
+                            label: "Instantaneous Growth Rate f'(t) (g/day)",
+                            data: dataObj.rateDataset,
+                            borderColor: '#6366f1', // indigo-500
+                            backgroundColor: 'transparent',
+                            borderWidth: 3,
+                            borderDash: [5, 5],
+                            yAxisID: 'y1',
+                            pointRadius: 0,
+                            pointHoverRadius: 8,
+                            pointHoverBackgroundColor: '#6366f1',
+                            pointHoverBorderColor: '#fff',
+                            pointHoverBorderWidth: 2,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    onClick: (event, elements) => {
+                        const points = chartInstance.getElementsAtEventForMode(event, 'nearest', { intersect: false }, true);
+                        if (points.length) {
+                            const firstPoint = points[0];
+                            selectedDay = dataObj.labels[firstPoint.index];
+                            updateStatsPanel();
+                            
+                            // Highlight clicked location dynamically
+                            chartInstance.options.plugins.annotation = {
+                                annotations: {
+                                    line1: {
+                                        type: 'line',
+                                        xMin: selectedDay,
+                                        xMax: selectedDay,
+                                        borderColor: 'rgba(139, 92, 246, 0.4)', // purple-500
+                                        borderWidth: 2,
+                                        label: {
+                                            content: `Day ${selectedDay}`,
+                                            enabled: true,
+                                            position: 'center',
+                                            backgroundColor: '#8b5cf6',
+                                            color: '#fff',
+                                            font: {
+                                                size: 10,
+                                                weight: 'bold'
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+                            chartInstance.update();
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleColor: '#f8fafc',
+                            bodyColor: '#cbd5e1',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            padding: 12,
+                            boxPadding: 4,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(2);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Days After Anthesis (DAA)',
+                                color: '#94a3b8',
+                                font: {
+                                    size: 11,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(51, 65, 85, 0.3)'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Cumulative Weight (g)',
+                                color: '#10b981',
+                                font: {
+                                    size: 11,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(51, 65, 85, 0.3)'
+                            },
+                            ticks: {
+                                color: '#10b981'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Growth Velocity (g/day)',
+                                color: '#6366f1',
+                                font: {
+                                    size: 11,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                drawOnChartArea: false // prevent grid line overlapping
+                            },
+                            ticks: {
+                                color: '#6366f1'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Listener to respond to parameter modifications
+        function initListeners() {
+            sliderL.addEventListener('input', (e) => {
+                L = parseFloat(e.target.value);
+                valL.textContent = `${L} g`;
+                renderChart();
+                updateStatsPanel();
+            });
+
+            sliderK.addEventListener('input', (e) => {
+                k = parseFloat(e.target.value);
+                valK.textContent = k.toFixed(3);
+                renderChart();
+                updateStatsPanel();
+            });
+
+            sliderT0.addEventListener('input', (e) => {
+                t0 = parseInt(e.target.value);
+                valT0.textContent = `${t0} DAA`;
+                renderChart();
+                updateStatsPanel();
+            });
+
+            resetParamsBtn.addEventListener('click', () => {
+                L = 420;
+                k = 0.080;
+                t0 = 50;
+
+                sliderL.value = L;
+                sliderK.value = k;
+                sliderT0.value = t0;
+
+                valL.textContent = `${L} g`;
+                valK.textContent = k.toFixed(3);
+                valT0.textContent = `${t0} DAA`;
+
+                selectedDay = 50;
+
+                // Reset specific highlighted cursor line
+                if (chartInstance) {
+                    chartInstance.options.plugins.annotation = {};
+                }
+
+                renderChart();
+                updateStatsPanel();
+            });
+        }
+
+        // Initialize application on window load completion
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+            
+            // Safe rendering of LaTeX formulas on body after load completes
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }
+            
+            renderChart();
+            updateStatsPanel();
+            initListeners();
+        });
+    </script>
+</body>
+</html>
