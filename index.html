@@ -601,6 +601,72 @@
                 sliderK.value = k;
                 sliderT0.value = t0;
 
+                // ========================================================
+// KOD ANIMASI AUTOMATIK (VERSI KEMAS KINI)
+// ========================================================
+let animationInterval = null;
+const weekSlider = document.getElementById('weekSlider');
+
+                <div class="flex justify-start mb-2">
+    <button id="playButton" type="button" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-1 transition-all">
+        <span id="playIcon">▶</span> <span id="playText">Mainkan Animasi</span>
+    </button>
+</div>
+const playButton = document.getElementById('playButton');
+const playIcon = document.getElementById('playIcon');
+const playText = document.getElementById('playText');
+
+function toggleAnimation() {
+    if (animationInterval) {
+        clearInterval(animationInterval);
+        animationInterval = null;
+        playIcon.innerText = "▶";
+        playText.innerText = "Mainkan Animasi";
+        playButton.className = "bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-1 transition-all";
+    } else {
+        playIcon.innerText = "⏸";
+        playText.innerText = "Hentikan Animasi";
+        playButton.className = "bg-yellow-500 hover:bg-yellow-600 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-1 transition-all";
+        
+        if (parseFloat(weekSlider.value) >= 12) {
+            weekSlider.value = 0;
+        }
+
+        animationInterval = setInterval(() => {
+            let currentWeek = parseFloat(weekSlider.value);
+            currentWeek += 0.1;
+            
+            if (currentWeek <= 12) {
+                weekSlider.value = currentWeek.toFixed(1);
+                updateDashboard(currentWeek);
+            } else {
+                toggleAnimation();
+            }
+        }, 100);
+    }
+}
+
+if (playButton) {
+    playButton.addEventListener('click', toggleAnimation);
+}
+
+if (weekSlider) {
+    weekSlider.addEventListener('input', (e) => {
+        if (animationInterval) toggleAnimation(); 
+        updateDashboard(e.target.value);
+    });
+}
+
+// Tambahan logik dalam window.onload sedia ada awak
+const originalOnload = window.onload;
+window.onload = function() {
+    if (originalOnload) originalOnload();
+    if (weekSlider) {
+        weekSlider.value = 6.0;
+        updateDashboard(6.0);
+    }
+};
+
                 valL.textContent = `${L} g`;
                 valK.textContent = k.toFixed(3);
                 valT0.textContent = `${t0} DAA`;
